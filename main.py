@@ -12,7 +12,8 @@ class Window:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.choice = IntVar(value=0)
-        self.textVar= StringVar(value=" ")
+        self.textVar= StringVar(value="")
+
     #запуск приложения
     def run(self):
         self.root.mainloop()
@@ -24,18 +25,30 @@ class Window:
 
         self.text = scrolledtext.ScrolledText(self.root, state='disabled')
         self.text.configure(state='normal')
-        for event in self.varIvent:
-            self.text.insert('insert', f"{event.EventCategory}\n")
-            self.text.insert('insert', f"{event.TimeGenerated}\n")
-            self.text.insert('insert', f"{event.SourceName}\n")
-            self.text.insert('insert', f"{event.EventID}\n")
-            self.text.insert('insert', f"{event.EventType}\n")
-            self.text.insert('insert', f"{event.StringInserts}\n")
-            self.text.insert('insert', f"{event.ComputerName}\n")
-            self.text.insert('insert', f"{event.Sid}\n")
-            self.text.insert('insert', f"{event.RecordNumber}\n")
-            self.text.insert('insert', f"{event.TimeWritten}\n")
-            self.text.insert('insert', f"{'=' * 50}\n")
+        hand = win32evtlog.OpenEventLog(None, self.log_type)
+        flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
+
+        while True:
+            events = win32evtlog.ReadEventLog(hand, flags, 0)
+            if not events:
+                break
+
+            for event in events:
+                if (self.textVar.get() in f"{event.EventCategory}") or (self.textVar.get() in f"{event.TimeGenerated}") or (self.textVar.get() in f"{event.SourceName}") or (self.textVar.get() in f"{event.EventID}") or (self.textVar.get() in f"{event.EventType}") or (self.textVar.get() in f"{event.StringInserts}"):
+                    self.text.insert('insert', f"{event.EventCategory}\n")
+                    self.text.insert('insert', f"{event.TimeGenerated}\n")
+                    self.text.insert('insert', f"{event.SourceName}\n")
+                    self.text.insert('insert', f"{event.EventID}\n")
+                    self.text.insert('insert', f"{event.EventType}\n")
+                    self.text.insert('insert', f"{event.StringInserts}\n")
+                    self.text.insert('insert', f"{'=' * 50}\n")
+        # for event in self.varIvent:
+        #
+        #     self.text.insert('insert', f"{event.ComputerName}\n")
+        #     self.text.insert('insert', f"{event.Sid}\n")
+        #     self.text.insert('insert', f"{event.RecordNumber}\n")
+        #     self.text.insert('insert', f"{event.TimeWritten}\n")
+        #
 
         self.text.configure(state='disabled')
         self.text.pack(fill='both', expand=True)
@@ -43,15 +56,15 @@ class Window:
 
 
     def updateLog(self):
-        global Security, Application, System
+        # global Security, Application, System
 
         # varIvent = Application
         if (self.choice.get() == 0):
-            self.varIvent = System
+            self.log_type = 'System'
         elif (self.choice.get() == 1):
-            self.varIvent = Application
+            self.log_type = 'Application'
         elif (self.choice.get() == 2):
-            self.varIvent = Security
+            self.log_type = 'Security'
         self.creatList()
 
     #Создание виджетов управления
@@ -74,8 +87,10 @@ class Window:
         self.text.pack_forget()
         self.updateLog()
 
-    def searhText(self):
-        if self.textVar.get() in ()
+    def test(self):
+        print(self.textVar.get())
+
+
 
 
 #чтение логов
