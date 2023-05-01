@@ -96,13 +96,7 @@ class Window:
 #чтение логов
 
 
-hand1 = win32evtlog.OpenEventLog(None, "Security")
-hand2 = win32evtlog.OpenEventLog(None, "Application")
-hand3 = win32evtlog.OpenEventLog(None, "System")
-flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
-Security = win32evtlog.ReadEventLog(hand1, flags, 0)
-Application = win32evtlog.ReadEventLog(hand2, flags, 0)
-System = win32evtlog.ReadEventLog(hand3, flags, 0)
+
 
 #запуск приложения
 window = Window(500, 500)
