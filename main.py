@@ -60,7 +60,7 @@ class Window:
     def dateSearch(self,date,flag=0):
         date = f"{date}"
         if (date != ''):
-            print(int(date.replace('-', '')[0:8]))
+            #print(int(date.replace('-', '')[0:8]))
             return int(date.replace('-','')[0:8])
         elif (date=='' and flag == 1):
             return 0

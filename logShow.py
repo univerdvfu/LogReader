@@ -12,7 +12,7 @@ class Window:
         self.root.geometry(f"{width}x{height}+200+200")
         self.root.resizable(resizable[0], resizable[1])
         self.choice = IntVar(value=0)
-        self.textVar= StringVar(value=" ")
+        self.textVar= StringVar(value="")
 
     #запуск приложения
     def run(self):
@@ -25,8 +25,6 @@ class Window:
 
         self.text = scrolledtext.ScrolledText(self.root, state='disabled')
         self.text.configure(state='normal')
-
-
         hand = win32evtlog.OpenEventLog(None, self.log_type)
         flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
 
@@ -34,14 +32,16 @@ class Window:
             events = win32evtlog.ReadEventLog(hand, flags, 0)
             if not events:
                 break
+
             for event in events:
-                self.text.insert('insert', f"{event.EventCategory}\n")
-                self.text.insert('insert', f"{event.TimeGenerated}\n")
-                self.text.insert('insert', f"{event.SourceName}\n")
-                self.text.insert('insert', f"{event.EventID}\n")
-                self.text.insert('insert', f"{event.EventType}\n")
-                self.text.insert('insert', f"{event.StringInserts}\n")
-                self.text.insert('insert', f"{'=' * 50}\n")
+                if (self.textVar.get() in f"{event.EventCategory}") or (self.textVar.get() in f"{event.TimeGenerated}") or (self.textVar.get() in f"{event.SourceName}") or (self.textVar.get() in f"{event.EventID}") or (self.textVar.get() in f"{event.EventType}") or (self.textVar.get() in f"{event.StringInserts}"):
+                    self.text.insert('insert', f"{event.EventCategory}\n")
+                    self.text.insert('insert', f"{event.TimeGenerated}\n")
+                    self.text.insert('insert', f"{event.SourceName}\n")
+                    self.text.insert('insert', f"{event.EventID}\n")
+                    self.text.insert('insert', f"{event.EventType}\n")
+                    self.text.insert('insert', f"{event.StringInserts}\n")
+                    self.text.insert('insert', f"{'=' * 50}\n")
         # for event in self.varIvent:
         #
         #     self.text.insert('insert', f"{event.ComputerName}\n")
@@ -87,19 +87,16 @@ class Window:
         self.text.pack_forget()
         self.updateLog()
 
+    def test(self):
+        print(self.textVar.get())
+
 
 
 
 #чтение логов
 
 
-hand1 = win32evtlog.OpenEventLog(None, "Security")
-hand2 = win32evtlog.OpenEventLog(None, "Application")
-hand3 = win32evtlog.OpenEventLog(None, "System")
-flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
-Security = win32evtlog.ReadEventLog(hand1, flags, 0)
-Application = win32evtlog.ReadEventLog(hand2, flags, 0)
-System = win32evtlog.ReadEventLog(hand3, flags, 0)
+
 
 #запуск приложения
 window = Window(500, 500)
