@@ -1,7 +1,8 @@
 from tkinter import *
-from tkinter import scrolledtext
+from tkinter import ttk
+from tkinter import scrolledtext #библиотека чтоб интерфейс красиво
 
-import win32evtlog
+import win32evtlog #библиотека для чтения логов
 
 
 class Window:
@@ -26,7 +27,7 @@ class Window:
     def creatList(self):
 
         self.text = scrolledtext.ScrolledText(self.root, state='disabled')
-        self.text.configure(state='normal')
+        self.text.configure(state='normal', bg="#e299ff")
         hand = win32evtlog.OpenEventLog(None, self.log_type)
         flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
 
@@ -45,7 +46,8 @@ class Window:
                         self.text.insert('insert', f"{event.EventID}\n")
                         self.text.insert('insert', f"{event.EventType}\n")
                         self.text.insert('insert', f"{event.StringInserts}\n")
-                        self.text.insert('insert', f"{'=' * 50}\n")
+                        self.text.insert('insert', f" \n")
+
         # for event in self.varIvent:
         #
         #     self.text.insert('insert', f"{event.ComputerName}\n")
@@ -69,9 +71,9 @@ class Window:
 
 
 
-    def updateLog(self):
+    def updateLog(self,selt=0):
         # global Security, Application, System
-
+        print(selt)
         # varIvent = Application
         if (self.choice.get() == 0):
             self.log_type = 'System'
@@ -83,9 +85,11 @@ class Window:
 
     #Создание виджетов управления
     def drowWidgets(self):
-        frameSelect = Frame(self.root)
-        frameSearch = Frame(self.root)
-        frameSearch2 = Frame(self.root)
+        style = ttk.Style()
+        style.configure("Custom.TRadiobutton", background="9e68b3")
+        frameSelect = Frame(self.root, width=20, height=10,borderwidth=2)
+        frameSearch = Frame(self.root, width=20, height=10)
+        frameSearch2 = Frame(self.root, width=20, height=10)
 
         frameSelect.pack()
         frameSearch.pack()
@@ -101,15 +105,16 @@ class Window:
         self.entry2 = Entry(frameSearch2, textvariable=self.textVar2).pack(side=LEFT)
         self.entry3 = Entry(frameSearch2, textvariable=self.textVar3).pack(side=LEFT)
         self.button = Button(frameSearch2, text="search", command=self.update_text).pack(side=LEFT)
+        self.root.configure(bg="#9e68b3")
+        frameSelect.configure(bg="#9e68b3")
+        frameSearch.configure(bg="#9e68b3")
+        frameSearch2.configure(bg="#9e68b3")
+
 
     #обновление списка логов
     def update_text(self):
         self.text.pack_forget()
         self.updateLog()
-
-    def test(self):
-        print(self.textVar.get())
-
 
 
 
